@@ -73,6 +73,24 @@ agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 st.set_page_config(page_title="Raymondo Chatbot", page_icon="🦜")
 st.title("🦜 Raymondo Chatbot")
 
+with st.expander("ℹ️ How to use Raymondo (click to expand)"):
+st.markdown("""
+### 👋 Welcome to Raymondo — Your AI Chat Assistant
+
+This tool helps Retirement Solutions staff retrieve internal knowledge using natural language.
+
+#### 📌 How to Use:
+- Type a question into the chat box below
+- Responses are based on internal training documents — always double-check before advising clients
+
+#### 🔐 Access:
+- You must be signed in with an authorised email to use this tool
+- If you encounter access issues, contact: `derek.henderson@retirementsolutions.co.uk`
+
+---
+""")
+
+
 # initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
