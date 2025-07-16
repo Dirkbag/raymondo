@@ -74,7 +74,7 @@ st.set_page_config(page_title="Raymondo Chatbot", page_icon="🦜")
 st.title("🦜 Raymondo Chatbot")
 
 with st.expander("ℹ️ How to use Raymondo (click to expand)"):
-st.markdown("""
+    st.markdown("""
 ### 👋 Welcome to Raymondo — Your AI Chat Assistant
 
 This tool helps Retirement Solutions staff retrieve internal knowledge using natural language.
