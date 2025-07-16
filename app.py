@@ -81,7 +81,7 @@ This tool helps Retirement Solutions staff retrieve internal knowledge using nat
 
 #### 📌 How to Use:
 - Type a question into the chat box below
-- Responses are based on internal training documents — always double-check before advising clients
+- Responses are based on internal training documents
 
 #### 🔐 Access:
 - You must be signed in with an authorised email to use this tool
