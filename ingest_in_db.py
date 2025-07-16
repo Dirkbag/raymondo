@@ -1,6 +1,15 @@
 # import basics
 import os
+import logging
 from dotenv import load_dotenv
+
+
+
+# UNCOMMENT THE BELOW FOR CHECKING
+# print("Now in directory:", os.getcwd())
+# print("Current working directory:", os.getcwd())
+# print("Directory exists:", os.path.isdir("documents"))
+# print("Files in folder:", os.listdir("documents"))
 
 # import langchain
 from langchain_community.document_loaders import PyPDFDirectoryLoader
@@ -11,6 +20,15 @@ from langchain_openai import OpenAIEmbeddings
 
 # import supabase
 from supabase.client import Client, create_client
+
+# Force working directory to this script's folder
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+os.chdir(SCRIPT_DIR)
+# ABSOLUTE PATH: os.chdir(r"C:\Users\DerekHenderson\OneDrive - Retirement Solutions\Documents\Python_scripts\Raymondo_RAG")
+
+# Logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # load environment variables
 load_dotenv()  
@@ -40,3 +58,5 @@ vector_store = SupabaseVectorStore.from_documents(
     query_name="match_documents",
     chunk_size=1000,
 )
+
+print(f"Loaded {len(docs)} document chunks.")
