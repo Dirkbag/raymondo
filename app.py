@@ -21,13 +21,13 @@ from langchain_core.tools import tool
 # import supabase db
 from supabase.client import Client, create_client
 
-# load environment variables
-load_dotenv()  
+# # Replace this:
+# load_dotenv()
 
-# initiating supabase
-supabase_url = os.environ.get("SUPABASE_URL")
-supabase_key = os.environ.get("SUPABASE_SERVICE_KEY")
-supabase: Client = create_client(supabase_url, supabase_key)
+# With this:
+supabase_url = st.secrets["SUPABASE_URL"]
+supabase_key = st.secrets["SUPABASE_SERVICE_KEY"]
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
 # initiating embeddings model
 embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
