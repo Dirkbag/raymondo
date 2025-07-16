@@ -29,6 +29,9 @@ supabase_url = st.secrets["SUPABASE_URL"]
 supabase_key = st.secrets["SUPABASE_SERVICE_KEY"]
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
+# Initialize Supabase client
+supabase = create_client(supabase_url, supabase_key)
+
 # initiating embeddings model
 embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 
@@ -45,7 +48,6 @@ llm = ChatOpenAI(model="gpt-4o",temperature=0)
 
 # pulling prompt from hub
 prompt = hub.pull("hwchase17/openai-functions-agent")
-
 
 # creating the retriever tool
 @tool(response_format="content_and_artifact")
