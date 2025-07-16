@@ -106,7 +106,7 @@ for message in st.session_state.messages:
 
 
 # create the bar where we can type messages
-user_question = st.chat_input("How are you?")
+user_question = st.chat_input("Ask me a question....")
 
 
 # did the user submit a prompt?
