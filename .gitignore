@@ -1,2 +1,5 @@
 .env
 venv
+.venv
+.streamlit/secrets.toml
+Z-Archive/
