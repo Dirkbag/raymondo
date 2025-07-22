@@ -30,7 +30,6 @@ with st.expander("ℹ️ How to use Raymondo (click to expand)"):
     
     #### 🔐 Access & Setup:
     - You must be signed in with an authorised email to use this tool.
-    - **For SQL Agent to work**, the required database secrets must be set.
     - If you encounter access issues, contact: `derek.henderson@retirementsolutions.co.uk`
     ---
     """)
