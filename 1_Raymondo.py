@@ -17,6 +17,25 @@ st.set_page_config(
     layout="wide"
 )
 st.title("🦜 Raymondo Chatbot")
+
+# --- Temporary Debugging Section ---
+# This section will help us see which secrets the app can access on Streamlit Cloud.
+with st.expander("🔍 Secrets Debug Information"):
+    st.write("Checking for available secrets...")
+    try:
+        all_secrets = st.secrets.to_dict()
+        if not all_secrets:
+            st.warning("Warning: `st.secrets` is empty.")
+        else:
+            st.success("Secrets dictionary is available.")
+            st.write("The following secret keys were found:")
+            # We only print the keys (names) for security, not the values.
+            st.write(list(all_secrets.keys()))
+    except Exception as e:
+        st.error(f"An error occurred while accessing st.secrets: {e}")
+# --- End of Debugging Section ---
+
+
 with st.expander("ℹ️ How to use Raymondo (click to expand)"):
     st.markdown("""
     ### 👋 Welcome to Raymondo — Your AI Chat Assistant
@@ -29,6 +48,7 @@ with st.expander("ℹ️ How to use Raymondo (click to expand)"):
     
     #### 🔐 Access & Setup:
     - You must be signed in with an authorised email to use this tool.
+    - **For SQL Agent to work**, the `DB_HOST`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME` secrets must be set.
     - If you encounter access issues, contact: `derek.henderson@retirementsolutions.co.uk`
     ---
     """)
