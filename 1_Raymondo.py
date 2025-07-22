@@ -18,24 +18,6 @@ st.set_page_config(
 )
 st.title("🦜 Raymondo Chatbot")
 
-# --- Temporary Debugging Section ---
-# This section will help us see which secrets the app can access on Streamlit Cloud.
-with st.expander("🔍 Secrets Debug Information"):
-    st.write("Checking for available secrets...")
-    try:
-        all_secrets = st.secrets.to_dict()
-        if not all_secrets:
-            st.warning("Warning: `st.secrets` is empty.")
-        else:
-            st.success("Secrets dictionary is available.")
-            st.write("The following secret keys were found:")
-            # We only print the keys (names) for security, not the values.
-            st.write(list(all_secrets.keys()))
-    except Exception as e:
-        st.error(f"An error occurred while accessing st.secrets: {e}")
-# --- End of Debugging Section ---
-
-
 with st.expander("ℹ️ How to use Raymondo (click to expand)"):
     st.markdown("""
     ### 👋 Welcome to Raymondo — Your AI Chat Assistant
@@ -48,15 +30,10 @@ with st.expander("ℹ️ How to use Raymondo (click to expand)"):
     
     #### 🔐 Access & Setup:
     - You must be signed in with an authorised email to use this tool.
-    - **For SQL Agent to work**, the `DB_HOST`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME` secrets must be set.
+    - **For SQL Agent to work**, the required database secrets must be set.
     - If you encounter access issues, contact: `derek.henderson@retirementsolutions.co.uk`
     ---
     """)
-
-# --- Helper function to check for DB secrets ---
-def check_db_secrets():
-    """Checks if all required database secrets are present in Streamlit secrets."""
-    return all(s in st.secrets for s in ["DB_USER", "DB_PASSWORD", "DB_HOST", "DB_NAME"])
 
 # --- 2. System Initialization ---
 # @st.cache_resource runs this function only once per session, making the app fast.
@@ -94,9 +71,19 @@ def initialize_system():
 
     # --- Agent 2: SQL Agent ---
     sql_executor = None
-    if check_db_secrets():
+    db_uri = ""
+    
+    # More robust check for database credentials.
+    # First, check for a complete DATABASE_URI.
+    if "DATABASE_URI" in st.secrets:
+        db_uri = st.secrets["DATABASE_URI"]
+    # If not found, try to build it from the component parts.
+    elif all(k in st.secrets for k in ["DB_USER", "DB_PASSWORD", "DB_HOST", "DB_NAME", "DB_PORT"]):
+        db_uri = f"postgresql://{st.secrets['DB_USER']}:{st.secrets['DB_PASSWORD']}@{st.secrets['DB_HOST']}:{st.secrets['DB_PORT']}/{st.secrets['DB_NAME']}"
+
+    # If we have a URI, try to connect.
+    if db_uri:
         try:
-            db_uri = f"postgresql://{st.secrets['DB_USER']}:{st.secrets['DB_PASSWORD']}@{st.secrets['DB_HOST']}:5432/{st.secrets['DB_NAME']}"
             db_engine = create_engine(db_uri)
             db = SQLDatabase(db_engine, include_tables=['completions'])
             sql_executor = create_sql_agent(
@@ -107,6 +94,7 @@ def initialize_system():
                 handle_parsing_errors=True
             )
         except Exception as e:
+            # This will print the error to the logs for debugging, but won't crash the app.
             print(f"SQL Agent Initialization Error: {e}")
             
     return doc_executor, sql_executor
@@ -131,7 +119,7 @@ if is_sql_agent_available:
     radio_options.append("Case Data (Completions)")
 else:
     st.warning(
-        "**SQL Agent is unavailable.** To enable querying of 'Case Data', please set the required database secrets in your configuration.",
+        "**SQL Agent is unavailable.** To enable querying of 'Case Data', please ensure the required database secrets are correctly set in your configuration.",
         icon="🔥"
     )
 
