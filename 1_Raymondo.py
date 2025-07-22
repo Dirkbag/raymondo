@@ -35,6 +35,13 @@ with st.expander("ℹ️ How to use Raymondo (click to expand)"):
     ---
     """)
 
+# DEBUG
+required_secrets = ["OPENAI_API_KEY", "SUPABASE_URL", "SUPABASE_SERVICE_KEY", "DB_USER", "DB_PASSWORD", "DB_HOST", "DB_NAME"]
+missing = [k for k in required_secrets if k not in st.secrets]
+if missing:
+    st.error(f"Missing required secrets: {', '.join(missing)}. Please check your Streamlit Cloud settings.")
+
+
 # --- 2. System Initialization ---
 # @st.cache_resource runs this function only once per session, making the app fast.
 @st.cache_resource
