@@ -71,19 +71,14 @@ def initialize_system():
 
     # --- Agent 2: SQL Agent ---
     sql_executor = None
-    db_uri = ""
     
-    # More robust check for database credentials.
-    # First, check for a complete DATABASE_URI.
-    if "DATABASE_URI" in st.secrets:
-        db_uri = st.secrets["DATABASE_URI"]
-    # If not found, try to build it from the component parts.
-    elif all(k in st.secrets for k in ["DB_USER", "DB_PASSWORD", "DB_HOST", "DB_NAME", "DB_PORT"]):
-        db_uri = f"postgresql://{st.secrets['DB_USER']}:{st.secrets['DB_PASSWORD']}@{st.secrets['DB_HOST']}:{st.secrets['DB_PORT']}/{st.secrets['DB_NAME']}"
-
-    # If we have a URI, try to connect.
-    if db_uri:
+    # Directly and robustly build the database URI from its component parts.
+    # This is the most reliable method.
+    if all(k in st.secrets for k in ["DB_USER", "DB_PASSWORD", "DB_HOST", "DB_NAME"]):
         try:
+            # Construct the URI, assuming the standard PostgreSQL port 5432.
+            db_uri = f"postgresql://{st.secrets['DB_USER']}:{st.secrets['DB_PASSWORD']}@{st.secrets['DB_HOST']}:5432/{st.secrets['DB_NAME']}"
+            
             db_engine = create_engine(db_uri)
             db = SQLDatabase(db_engine, include_tables=['completions'])
             sql_executor = create_sql_agent(
