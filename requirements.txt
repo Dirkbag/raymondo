@@ -24,3 +24,5 @@ pyarrow
 toolz
 tenacity
 typing_extensions
+
+psycopg2-binary
